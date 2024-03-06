@@ -29,7 +29,8 @@ The pipeline is executed through `quay.io/qiime2/core:2023.7` image and includes
 
 # Usage
 ## Help message
-`nextflow run github/its_pipeline/main.nf --help
+```bash
+nextflow run github/its_pipeline/main.nf --help
 
 Usage:
  The typical command for running the pipeline is as follows:
@@ -75,4 +76,5 @@ Optional arguments:
                                   that were sequenced in the last cycles. Reads that
                                   are shorter than this value will be discarded. If 0
                                   is provided, no truncation or length filtering will
-                                  be performed [Default: 0] `
+                                  be performed [Default: 0]
+```
