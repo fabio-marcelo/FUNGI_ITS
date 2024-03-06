@@ -4,4 +4,5 @@ This is a pipeline implemented in nextflow to identify fungus through ITS2 metab
 # Prerequisites
 * OS Ubuntu
 * Docker [tutorial](https://docs.docker.com/engine/install/ubuntu/)
-* Nextflow [tutorial]([https://docs.docker.com/engine/install/ubuntu/](https://www.nextflow.io/docs/latest/getstarted.html)https://www.nextflow.io/docs/latest/getstarted.html)
+* Nextflow [tutorial](https://www.nextflow.io/docs/latest/getstarted.html)
+
