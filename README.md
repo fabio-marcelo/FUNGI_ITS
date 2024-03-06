@@ -78,3 +78,7 @@ Optional arguments:
                                   is provided, no truncation or length filtering will
                                   be performed [Default: 0]
 ```
+## Run the pipeline
+You need to provide at least the `--fastq_folder` parameter.
+
+`nextflow run github/its_pipeline/main.nf --fastq_folder 'its_reads'`
