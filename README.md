@@ -1,5 +1,5 @@
 # FUNGI_ITS_TAXONOMY
-This is a pipeline implemented in nextflow to identify fungus through ITS2 metabarcoding generated in S5 IonTorrent. The outputs (one csv and one html report) are stored in the `final_report` folder inside the output directory.
+This is a pipeline implemented in nextflow to identify fungi through ITS2 metabarcoding generated in S5 IonTorrent. The outputs (one csv and one html report) are stored in the `final_report` folder inside the output directory.
 
 
 
