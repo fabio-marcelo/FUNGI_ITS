@@ -7,11 +7,16 @@ def helpMessage() {
         Usage:
         The typical command for running the pipeline is as follows:
 
-        nextflow run main.nf --primer_seq "primer_sequence" --fastq_folder /path/to/my/fastq_files 
-        --trainned_classifier "full_path/and_name/to/my/trainned_classifier 
-        --ref_reads full_path/to/reference_reads.fasta --tax_file full_path/to/tax_file.txt 
-        --outdir output-folder-name --threads "15"
+        nextflow run main.nf --primer_seq 'primer_sequence' --fastq_folder '/path/to/my/fastq_files' \
+          --trainned_classifier 'full_path/and_name/to/my/trainned_classifier' \
+          --ref_reads 'full_path/to/reference_reads.fasta' \
+          --tax_file 'full_path/to/tax_file.txt' \
+          --outdir 'output-folder-name' \
+          --threads "15"
 
+        If using default parameters, you inly need to provide "fastq_folder" and a csv file (named samplesheet.csv)
+        containing the sample names in the first column "named "sample", reads1 in the second column named "r1" and
+        a third column empty column "r2".
   
   
   
@@ -62,13 +67,13 @@ if (params.help) {
 
 
 process SAMPLESHEET{
-    publishDir "${params.outdir}", mode:'copy'
+    publishDir "${params.outdir}", mode:'copy', pattern: "samplesheet.csv"
 
     input:
         path(folder) 
 
     output:
-        path ("samplesheet.csv")
+        path ("samplesheet.csv"), emit: samplesheet
         path ("sample.txt")
         path ("r1.txt")
         path ("r2.txt")
@@ -129,7 +134,7 @@ process FASTQC {
     if(meta.single_end){
 
         """
-        cat ${reads} | fastqc stdin:${meta.id}
+        cat ${reads} | fastqc stdin:"${meta.id}"
         """
 
     } else {
