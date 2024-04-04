@@ -17,7 +17,7 @@ The pipeline is executed through `quay.io/qiime2/core:2023.7` image and includes
 
 # Parameters
 * Due to variability in the length of the sequences for ITS,we opted for not using the parameter `--p-trunc-len` = 0 [tutorial](https://benjjneb.github.io/dada2/ITS_workflow.html);
-* As the pattern shown by Ion S5 fastq files quality, the default for parameters `p_quality_cutoff_5end` and `p_quality_cutoff_3end` is 20;
+* As the pattern shown by Ion S5 fastq files quality, the default for parameters `p_quality_cutoff_5end` and `p_quality_cutoff_3end` are 20;
 * `p_error_rate = 0.2`
 * `p_minimum_length = 80`
 * `p_max_ee` = 2
