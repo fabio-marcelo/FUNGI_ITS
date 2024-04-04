@@ -44,7 +44,7 @@ Usage:
  	--threads "15"
 
  If using default parameters, you only need to provide "fastq_folder" and a csv file (named samplesheet.csv)
- containing the sample names in the first column "named "sample", reads1 in the second column named "r1" and
+ containing the sample names in the first column named "sample", reads1 in the second column named "r1" and
  a third column empty column "r2". The .csv fie must be placed inside the `--fastq_folder`.
 
 
