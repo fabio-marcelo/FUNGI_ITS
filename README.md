@@ -25,7 +25,7 @@ The pipeline is executed through `quay.io/qiime2/core:2023.7` image and includes
 * Percent identity for `qiime feature-classifier classify-consensus-blast = 0.99`
 * Percent identity for `qiime feature-classifier classify-sklearn = 0.99`
 * Percent identity for `qiime feature-classifier classify-sklearn --p-reads-per-batch = 10000`
-* Primer sequence for qiime cutadapt trim-single --i-demultiplexed-sequences `--p-front GGAAGTAAAAGTCGTAACAAGG`
+* Primer sequence for `qiime cutadapt trim-single --i-demultiplexed-sequences --p-front GGAAGTAAAAGTCGTAACAAGG`
 
 # Usage
 ## Help message
