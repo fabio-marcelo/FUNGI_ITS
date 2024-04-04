@@ -25,8 +25,7 @@ The pipeline is executed through `quay.io/qiime2/core:2023.7` image and includes
 * Percent identity for `qiime feature-classifier classify-consensus-blast = 0.99`
 * Percent identity for `qiime feature-classifier classify-sklearn = 0.99`
 * Percent identity for `qiime feature-classifier classify-sklearn --p-reads-per-batch = 10000`
-* Primer sequence for qiime cutadapt trim-single --i-demultiplexed-sequences --p-front GGAAGTAAAAGTCGTAACAAGG`
-* 
+* Primer sequence for qiime cutadapt trim-single --i-demultiplexed-sequences `--p-front GGAAGTAAAAGTCGTAACAAGG`
 
 # Usage
 ## Help message
@@ -44,7 +43,7 @@ Usage:
  	--outdir 'output-folder-name' \
  	--threads "15"
 
- If using default parameters, you inly need to provide "fastq_folder" and a csv file (named samplesheet.csv)
+ If using default parameters, you only need to provide "fastq_folder" and a csv file (named samplesheet.csv)
  containing the sample names in the first column "named "sample", reads1 in the second column named "r1" and
  a third column empty column "r2".
 
