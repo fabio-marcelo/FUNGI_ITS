@@ -1,0 +1,4 @@
+arquivos_db/ filter=lfs diff=lfs merge=lfs -text
+arquivos_db/sh_refs_qiime_ver9_99_s_all_29.11.2022_dev.fasta.gz filter=lfs diff=lfs merge=lfs -text
+arquivos_db/sh_taxonomy_qiime_ver9_99_s_all_29.11.2022_dev.txt.gz filter=lfs diff=lfs merge=lfs -text
+arquivos_db/trainned_qiime-2023.7_ver9_99_s_all_29.11.2022_dev.qza.gz filter=lfs diff=lfs merge=lfs -text
