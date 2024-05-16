@@ -397,7 +397,7 @@ process DECOMPRESS_REF {
     file(import_ref_reads_ch)
 
     output:
-    path ("*.fasta"), emit: ref_uncompressed
+    path ("*"), emit: ref_uncompressed
     
     script:
     """
@@ -429,7 +429,7 @@ process DECOMPRESS_TAX {
     path(import_tax_ch)
 
     output:
-    path ("*.txt"), emit: tax_uncompressed
+    path ("*"), emit: tax_uncompressed
     
     script:
     """
@@ -756,6 +756,69 @@ process ADJUST_COLS {
 
 }
 
+process BARPLOT_BLAST {
+  publishDir "${params.outdir}/final_report", mode:'copy'
+
+  input:
+    path(table_denoised)
+    path(blast_taxonomyITS)
+    path(metadataFile)
+  
+  output:
+    path("blast_taxa_barplots_filtered.qzv"), emit: blast_taxa_barplots_filtered
+
+  script:
+  """
+  qiime taxa barplot \
+  --i-table table-denoised.qza \
+  --i-taxonomy blast-taxonomyITS.qza \
+  --m-metadata-file ${metadataFile} \
+  --o-visualization blast_taxa_barplots_filtered.qzv
+  """
+}
+
+process BARPLOT_VSEARCH {
+  publishDir "${params.outdir}/final_report", mode:'copy'
+
+  input:
+    path(table_denoised)
+    path(vsearch_taxonomyITS)
+    path(metadataFile)
+  
+  output:
+    path("vsearch_taxa_barplots_filtered.qzv"), emit: vsearch_taxa_barplots_filtered
+
+  script:
+  """
+  qiime taxa barplot \
+  --i-table table-denoised.qza \
+  --i-taxonomy vsearch-taxonomyITS.qza \
+  --m-metadata-file ${metadataFile} \
+  --o-visualization vsearch_taxa_barplots_filtered.qzv
+  """
+}
+
+process BARPLOT_SKLEARN {
+  publishDir "${params.outdir}/final_report", mode:'copy'
+
+  input:
+    path(table_denoised)
+    path(sklearn_taxonomyITS)
+    path(metadataFile)
+  
+  output:
+    path("sklearn_taxa_barplots_filtered.qzv"), emit: sklearn_taxa_barplots_filtered
+
+  script:
+  """
+  qiime taxa barplot \
+  --i-table table-denoised.qza \
+  --i-taxonomy sklearn-taxonomyITS.qza \
+  --m-metadata-file ${metadataFile} \
+  --o-visualization sklearn_taxa_barplots_filtered.qzv
+  """
+}
+
 // format table using a custom python script
 process PYTHON_TASK {
   publishDir "${params.outdir}/final_report", mode:'copy'
@@ -855,6 +918,10 @@ workflow {
     CONVERT_BIOM(METADATA.out.vsearch_biom_with_taxonomy.collect(), METADATA.out.sklearn_biom_with_taxonomy.collect(), METADATA.out.blast_biom_with_taxonomy.collect(), REPLACE_HEADER3.out.blast_header_tsv.collect(),REPLACE_HEADER2.out.vsearch_header_tsv.collect(), REPLACE_HEADER1.out.sklearn_header_tsv.collect())
 // Adjust cols
     ADJUST_COLS(CONVERT_BIOM.out.vsearch_biom_with_taxonomy_tsv.collect(), CONVERT_BIOM.out.blast_biom_with_taxonomy_tsv.collect(), CONVERT_BIOM.out.sklearn_biom_with_taxonomy_tsv.collect())
+// Barplots
+    BARPLOT_BLAST(BLAST.out.blast_taxonomyITS.collectFile(name: "blast-taxonomyITS.qza"), DENOISE.out.table_denoised.collectFile(name: "table-denoised.qza"), METADATA_FILE.out.metadataFile.collect())
+    BARPLOT_SKLEARN(SKLEARN.out.sklearn_taxonomyITS.collectFile(name: "sklearn-taxonomyITS.qza"), DENOISE.out.table_denoised.collectFile(name: "table-denoised.qza"), METADATA_FILE.out.metadataFile.collect())
+    BARPLOT_VSEARCH(VSEARCH.out.vsearch_taxonomyITS.collectFile(name: "vsearch-taxonomyITS.qza"), DENOISE.out.table_denoised.collectFile(name: "table-denoised.qza"), METADATA_FILE.out.metadataFile.collect())
 // adjust sheets
     PYTHON_TASK(outdir_ch, ADJUST_COLS.out.sklearn_final_output_csv.collect(), ADJUST_COLS.out.blast_final_output_csv.collect(), ADJUST_COLS.out.vsearch_final_output_csv.collect())    
 // render report
