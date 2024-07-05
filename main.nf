@@ -871,11 +871,6 @@ workflow {
         .mix(single_channel)
         .set { my_channel }
 
-    // Create a channel with combinations of input data and k values
-    my_channel
-        .flatMap { meta, reads -> params.k_values.collect { k -> [meta, reads, k] } }
-        .set { input_channel }
-
     channel.fromPath(params.projectDir)
       .set { db_ch  }
     
