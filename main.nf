@@ -94,26 +94,6 @@ process SAMPLESHEET{
     
 }
 
-// Channel for the samplesheet
-ch_samplesheet = Channel.fromPath("${params.fastq_folder}/samplesheet.csv")
-
-// Parse it line by line
-ch_reads = ch_samplesheet.splitCsv(header:true).map {
-
-    // This is the read1 and read2 entry
-    r1 = it['r1']
-    r2 = it['r2']
-
-    // Detect wiether single-end or paired-end
-    is_singleEnd = r2.toString()=='' ? true : false
-    
-    // The "meta" map, which is a Nextflow/Groovy map with id (the sample name) and a single_end logical entry
-    meta = [id: it['sample'], single_end: is_singleEnd]
-    
-    // We return a nested map, the first entry is the meta map, the second one is the read(s)
-    r2.toString()=='' ? [meta, [r1]] : [meta, [r1, r2]]
-
-}
 
 process FASTQC {
     publishDir "${params.outdir}/fastqc_dir", mode:'copy'
@@ -865,21 +845,71 @@ process REPORT {
 }
 // // WORKFLOW // // 
 workflow {
-    db_ch = channel.fromPath(params.projectDir)
-    folder = channel.fromPath(params.fastq_folder)
-    folder2 = channel.fromPath(params.fastq_folder)
-    folder3 = channel.fromPath(params.fastq_folder)
-    import_ref_reads_ch = channel.fromPath(params.ref_reads)        
-    import_tax_ch = channel.fromPath(params.tax_file)
-    trainned_ch = channel.fromPath(params.trainned_classifier)
-    outdir_ch = channel.fromPath(params.outdir)
-    outdir_ch2 = channel.fromPath(params.outdir)
-    db_ch = channel.fromPath(params.projectDir)
-    //PREPARE_DB(db_ch)
+    // Define channels for paired-end and single-end files
+    def paired_channel = Channel
+        .fromFilePairs("${params.fastq_folder}/*_R{1,2}*.{fastq,fastq.gz,fq,fq.gz}")
+        .map { id, reads ->
+            def sample = id.tokenize("_R")[0]
+            def meta = [sample: sample, single_end: false]
+            [meta, [r1, r2]]
+        }
+
+    def single_channel = Channel
+        .fromPath("${params.fastq_folder}/*.{fastq,fastq.gz,fq,fq.gz}")
+        .filter { path -> 
+            !path.name.contains("_R1") && !path.name.contains("_R2")
+        }
+        .map { path ->
+            def sample = path.name.split("bp_")[1]
+            def meta = [id: sample, single_end: true]
+            [meta, [path]]
+        }
+
+    // Merge paired-end and single-end channels
+        // If use concat oeprator, itens will be emitted in the specified order
+    paired_channel
+        .mix(single_channel)
+        .set { my_channel }
+
+    // Create a channel with combinations of input data and k values
+    my_channel
+        .flatMap { meta, reads -> params.k_values.collect { k -> [meta, reads, k] } }
+        .set { input_channel }
+
+    channel.fromPath(params.projectDir)
+      .set { db_ch  }
+    
+    channel.fromPath(params.fastq_folder)
+      .set { folder }
+
+    channel.fromPath(params.fastq_folder)
+      .set { folder2 }
+
+    channel.fromPath(params.fastq_folder)
+      .set { folder3 }
+
+    channel.fromPath(params.ref_reads)
+      .set { import_ref_reads_ch }
+
+    channel.fromPath(params.tax_file)
+      .set { import_tax_ch }
+
+    channel.fromPath(params.trainned_classifier)
+      .set { trainned_ch }
+
+    channel.fromPath(params.outdir)
+      .set { outdir_ch }
+
+    channel.fromPath(params.outdir)
+      .set { outdir_ch2 }
+
+    channel.fromPath(params.projectDir)
+      .set { db_ch }
+
 // Create configuration file
     SAMPLESHEET(folder)
 // Run fastqc
-    FASTQC(ch_reads)
+    FASTQC(my_channel)
     MANIFEST(folder2)
     METADATA_FILE(folder3)
     SETUP()
