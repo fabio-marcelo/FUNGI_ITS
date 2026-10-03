@@ -10,18 +10,20 @@ execute:
 author: ""
 date: "`r Sys.Date()`"
 format:
-    html:
-      toc-title: Table of contents
-      toc: true
-      toc-depth: 2
-      number-sections: true
-      highlight-style: github
-      toc-location: body
-      cap-location: top
-      page-layout: full
-      embed-resources: true
-      self-contained-math: true
-      toc-expand: true
+  pdf:
+    documentclass: article
+    papersize: a4
+    fontsize: 10pt
+    number-sections: true
+    toc: true
+    geometry:
+      - left=1.5cm
+      - right=1.5cm
+      - top=1.5cm
+      - bottom=1.5cm
+    fig-align: center
+    fig-pos: "H"
+    keep-tex: false
 editor: visual
 ---
 
@@ -528,7 +530,8 @@ its2 <- its %>%
 readr::write_csv2(its2, file = paste0(folder_full, "/final_report/its_out.csv"))
 
 its2 %>%
-  kableExtra::kbl(caption = "Taxonomy", align = "ccc") %>%
+  kableExtra::kbl(caption = "Taxonomy", align = "ccc",booktabs = TRUE,
+    longtable = TRUE) %>%
   # Determina estilo e largura da tabela
   kableExtra::kable_classic(full_width = T,
                 html_font = "Cambria",
@@ -538,7 +541,11 @@ its2 %>%
   # Insere tra?o horizontal entre as linhas enumeradas em c()
   kableExtra::row_spec(row = c(1:nrow(its2)), extra_css = "border-bottom: 1px solid") %>%
   kableExtra::add_header_above(c("","", "20minLen" = 3, "80minLen" = 3), bold = TRUE) %>%
-  kableExtra::kable_styling(full_width = F)
+  kableExtra::kable_styling(full_width = F) %>%
+  kableExtra::kable_styling(
+    latex_options = c("repeat_header", "scale_down"),
+    font_size = 8
+  )
 ```
 
 # Session Info

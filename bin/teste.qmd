@@ -1,0 +1,63 @@
+---
+title: "Untitled"
+params:
+  fastqc_dir: ""
+  folder_full: ""
+execute:
+  cache: true
+  freeze: auto
+author: "Fábio M. de Lima"
+date: "`r Sys.Date()`"
+format:
+    html:
+      toc-title: Table of contents
+      toc: true
+      toc-depth: 2
+      number-sections: true
+      highlight-style: github
+      toc-location: body
+      cap-location: top
+      page-layout: full
+      embed-resources: true
+      self-contained-math: true
+      toc-expand: true
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+library(dplyr)
+library(datasets)
+library(ggplot2)
+library(ngsReports)
+
+
+
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+caminho <- params$fastqc_dir
+print(caminho)
+
+```
+
+```{r}
+
+
+```
